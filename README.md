@@ -1,4 +1,4 @@
-![cf](https://i.imgur.com/7v5ASc8.png) 11: Express and Babel
+![cf](https://i.imgur.com/7v5ASc8.png) 11: Express
 ======
 
 ### Submission Instructions
