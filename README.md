@@ -1,64 +1,33 @@
-![cf](https://i.imgur.com/7v5ASc8.png) 11: Express
-======
+#11-14-express-api [![Build Status](https://travis-ci.com/tnorth93/11-14-express-api.svg?branch=master)](https://travis-ci.com/tnorth93/11-14-express-api)
+This project is a server that has been built using express). HTTP methods GET, PUT, POST, and DELETE
+have been setup and are ready for use.
+##Getting Started
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+Clone this repo and navigate to a directory on your local machine. Once you have the folder setup where you want to install, use
+the command ```git clone <repo link>```. 
 
-### Submission Instructions
- * Work in a fork of this repository
- * Work in a branch on your fork
- * Create a PR to your master from your working branch.
- * Ensure that your repository/branch is connected to travis-ci.com
- * Heroku and Travis should pick you up and deploy
- * Submit on canvas:
-   * a question and observation
-   * how long you spent
-   * link to your pull request
-   * link to your build at travis-ci URL
- 
- ## Configuration 
- Configure the root of your repository with the following files and directories. Thoughfully name and organize any aditional configuration or module files.
- * **README.md** - contains documentation
- * **.env** - contains env variables (should be git ignored)
- * **.gitignore** - contains a [robust](http://gitignore.io) `.gitignore` file 
- * **.eslintrc** - contains the course linter configuratoin
- * **.eslintignore** - contains the course linter ignore configuration
- * **.travis.yml** - contains the course linter ignore configuration
- * **package.json** - contains npm package config
-   * create a `lint` script for running eslint (eslint **/*.js)
-   * create a `test` script for running tests
-   * create a `start` script for running your server
- * **index.js** - the entry point for your application
- * **src/** - contains your core application files and folders
- * **src/app.js** - (or main.js) contains your core application bootstrap
- * **src/lib/** - contains module definitions
- * **\_\_test\_\_/** - contains unit tests
+##Prerequisites
+To install, you'll need a computer with access to the internet, your favorite text editor, your computer's terminal,
+and npm installed. Once you have all of those things, use the command ```npm install``` to install all of the dependencies 
+required to run the server.
 
-## Learning Objectives  
-* students will be able to create a single resource API using the express framework
+##Running the tests
+All you need to run the tests is jest which is included in the package.json and should be installed when you npm install.
+Once you have everything installed, use the command ```npm run test```.
 
-## Requirements
+##Built With
+1. Node
+1b. Express
+2. JavaScript(ES6)
+3. Jest
+4. uuid
+5. http
+6. logger
+7. requestParser
+8. Faker
 
-#### Feature Tasks
-* create an HTTP server using `express`
-* create a object constructor that creates a _simple resource_ with at least 3 properties
-  * it can **not** have the same properties as the in-class sample code (other than the `id`)
-  * a unique `id` property should be included *(node-uuid)*
-  * include two additional properties of your choice
-* persist your API data using either an array or an array and an object as seen in class. 
+##Authors
+Tom North
 
-#### Server Endpoints
-* **`/api/vi/resource-name`**
-* `POST` request
- * pass data as stringifed JSON in the body of a **POST** request to create a new resource
-* `GET` request
- * pass `/:id` as a route parameter to **GET** a specific resource (as JSON)
-* `DELETE` request
- * pass `/:id` as a route parameter to **DELETE** a specific resource (as JSON)
- * this should return a 204 status code with no content in the body
-
-#### Tests
-* write a test to ensure that your api returns a status code of 404 for routes that have not been registered
-* write tests to ensure the `/api/simple-resource-name` endpoint responds as described for each condition below:
- * `GET`: test 404, it should respond with 'not found' for valid requests made with an id that was not found
- * `GET`: test 400, it should respond with 'bad request' if no id was provided in the request
- * `GET`: test 200, it should contain a response body for a request made with a valid id
- * `POST`: test 400, it should respond with 'bad request' if no request body was provided or the body was invalid
- * `POST`: test 200, it should respond with the body content for a post request with a valid body
+##License
+This project is licensed under the MIT License - see the LICENSE.md file for details
