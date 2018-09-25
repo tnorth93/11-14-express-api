@@ -1,4 +1,4 @@
-#11-14-express-api
+#11-14-express-api [![Build Status](https://travis-ci.com/tnorth93/11-14-express-api.svg?branch=master)](https://travis-ci.com/tnorth93/11-14-express-api)
 This project is a server that has been built using express). HTTP methods GET, PUT, POST, and DELETE
 have been setup and are ready for use.
 ##Getting Started
