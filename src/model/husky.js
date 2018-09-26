@@ -1,14 +1,23 @@
 'use strict';
 
-const uuid = require('uuid/v1');
+const mongoose = require('mongoose');
 
-class Husky {
-  constructor(name, description) {
-    this.id = uuid();
-    this.timestamp = new Date();
-    this.name = name;
-    this.description = description;
+const huskySchema = mongoose.Schema({
+  timestamp: {
+    type: Date,
+    default: () => new Date(),
+  },
+  title: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  content: {
+    type: String,
+    required: true,
+    minlength: 8,
   }
-}
+});
 
-module.exports = Husky;
+module.exports = mongoose.model('husky', huskySchema);
+

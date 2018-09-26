@@ -9,6 +9,24 @@ module.exports = (error, request, response, next) => { //eslint-disable-line
     logger.log(logger.ERROR, `Responding with a ${error.status} code and a message ofo ${error.message}`);
     return response.sendStatus(error.status);
   }
-  logger.log(logger.ERROR, 'Responding with 500 error code');
+
+  const errorMessage = error.message.toLowerCase();
+
+  if (errorMessage.includes('objectid failed')) {
+    logger.log(logger.ERROR, 'responding with 400 code');
+    logger.log(logger.ERROR, 'could not validate id');
+    return response.sendStatus(400);
+  }
+
+  if (errorMessage.includes('validation failed')) {
+    logger.log(logger.ERROR, 'responding with 400 code');
+    logger.log(logger.ERROR, 'validation failed');
+    return response.sendStatus(409);
+  }
+
+  logger.log(logger.ERROR, 'responding with 500 code');
   return response.sendStatus(500);
 };
+
+
+
