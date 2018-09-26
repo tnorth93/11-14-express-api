@@ -4,7 +4,16 @@ have been setup and are ready for use.
 ##Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 Clone this repo and navigate to a directory on your local machine. Once you have the folder setup where you want to install, use
-the command ```git clone <repo link>```. 
+the command ```git clone <repo link>```.
+
+###Commands to run from terminal to execute routes:
+1. ```node src/app.js``` this starts the server
+- TO RUN THE FOLLOWING COMMANDS TYPE THEM INTO A NEW TAB IN YOUR TERMINAL AFTER STARTING THE SERVER
+2. ```http GET :3000/api/huskies``` retrieves all of the huskies that are stored
+3. ```http GET :3000/api/huskies/<insert id here>``` retrieves the husky with the provided id inserted into the path
+4. ```http POST :3000/api/huskies name:'Chad' description:'is a dog'``` will create and store a new husky with the provided name and description
+5. ```http PUT :3000/api/huskies/<insert if here> name:'Chad' description:'is a dog'``` will update an existing husky with the provided id
+6. ```http DELETE :3000/api/huskies/<insert id here>``` will delete a husky with the provided id
 
 ##Prerequisites
 To install, you'll need a computer with access to the internet, your favorite text editor, your computer's terminal,
@@ -25,6 +34,7 @@ Once you have everything installed, use the command ```npm run test```.
 6. logger
 7. requestParser
 8. Faker
+9. superagent
 
 ##Authors
 Tom North
