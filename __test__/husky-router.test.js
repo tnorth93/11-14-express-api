@@ -1,6 +1,6 @@
 'use strict';
 
-process.env.PORT = 3000;
+process.env.PORT = 3500;
 
 const faker = require('faker');
 const superagent = require('superagent');
@@ -13,7 +13,7 @@ describe('/api/huskies', () => {
   beforeAll(server.start);
   afterAll(server.stop);
 
-  test('should respond with 200 status code and a new json husky', () => {
+  test('POST should respond with 200 status code and a new json husky', () => {
     return superagent.post(API_URL)
       .set('Content-Type', 'application/json')
       .send({
@@ -29,7 +29,7 @@ describe('/api/huskies', () => {
       });
   });
 
-  test('should respond with 400 status code if there is no name', () => {
+  test('POST should respond with 400 status code if there is no name', () => {
     return superagent.post(API_URL)
       .set('Content-Type', 'application/json')
       .send({
@@ -41,7 +41,7 @@ describe('/api/huskies', () => {
       });
   });
 
-  test('should respond with 404 for no id included in url', () => {
+  test('GET should respond with 404 for no id included in url', () => {
     return superagent.get(`http://localhost:${process.env.PORT}/api/huskies/`)
       .then(Promise.reject)
       .catch((response) => {
@@ -49,7 +49,7 @@ describe('/api/huskies', () => {
       });
   });
 
-  test('should respond with 200 status code and a json husky if there is a matching id', () => {
+  test('GET should respond with 200 status code and a json husky if there is a matching id', () => {
     const originalRequest = {
       name: faker.lorem.words(3),
       description: faker.lorem.words(6),
@@ -69,7 +69,7 @@ describe('/api/huskies', () => {
       });
   });
 
-  test('should respond with 404 for non-existent path', () => {
+  test('GET should respond with 404 for non-existent path', () => {
     return superagent.get(`http://localhost:${process.env.PORT}/api/huskiesc`)
       .then(Promise.reject)
       .catch((response) => {
@@ -77,11 +77,90 @@ describe('/api/huskies', () => {
       });
   });
 
-  test('should respond with 404 for non-existent husky', () => {
+  test('GET should respond with 404 for non-existent husky', () => {
     return superagent.get(`http://localhost:${process.env.PORT}/api/huskies/4545454545454`)
       .then(Promise.reject)
       .catch((response) => {
         expect(response.status).toEqual(404);
+      });
+  });
+
+  test('PUT should respond with a 404 when trying to update a non-existent husky', () => {
+    return superagent.put(`http://localhost:${process.env.PORT}/api/huskies/2012913813`)
+      .then(Promise.reject)
+      .catch((response) => {
+        expect(response.status).toEqual(404);
+      });
+  });
+
+  test('PUT should respond with an updated husky name', () => {
+    const ogRequest = {
+      name: faker.lorem.words(1),
+      description: faker.lorem.words(5),
+    };
+    return superagent.post(API_URL)
+      .set('Content-Type', 'application/json')
+      .send(ogRequest)
+      .then((postResponse) => {
+        ogRequest.id = postResponse.body.id;
+        return superagent.put(`${API_URL}/${postResponse.body.id}`)
+          .send({
+            name: 'Chad',
+          });
+      })
+      .then((putResponse) => {
+        expect(putResponse.status).toEqual(200);
+        expect(putResponse.body.id).toEqual(ogRequest.id);
+        expect(putResponse.body.name).toEqual('Chad');
+        expect(putResponse.body.description).toEqual(ogRequest.description);
+      });
+  });
+
+  test('PUT should respond with an updated husky description', () => {
+    const ogRequest = {
+      name: faker.lorem.words(1),
+      description: faker.lorem.words(5),
+    };
+    return superagent.post(API_URL)
+      .set('Content-Type', 'application/json')
+      .send(ogRequest)
+      .then((postResponse) => {
+        ogRequest.id = postResponse.body.id;
+        return superagent.put(`${API_URL}/${postResponse.body.id}`)
+          .send({
+            description: 'is a shady lil guy',
+          });
+      })
+      .then((putResponse) => {
+        expect(putResponse.status).toEqual(200);
+        expect(putResponse.body.id).toEqual(ogRequest.id);
+        expect(putResponse.body.name).toEqual(ogRequest.name);
+        expect(putResponse.body.description).toEqual('is a shady lil guy');
+      });
+  });
+
+  test(' DELETE should respond with a 404 if there is no husky to remove', () => {
+    return superagent.delete(`${API_URL}/beeeeebooooooooop`)
+      .then(Promise.reject)
+      .catch((getResponse) => {
+        expect(getResponse.status).toEqual(404);
+      });
+  });
+
+  test('DELETE respond with a 204 and removes a husky', () => {
+    const ogRequest = {
+      name: faker.lorem.words(1),
+      description: faker.lorem.words(5),
+    };
+    return superagent.post(API_URL)
+      .set('Content-Type', 'application/json')
+      .send(ogRequest)
+      .then((postResponse) => {
+        ogRequest.id = postResponse.body.id;
+        return superagent.delete(`${API_URL}/${postResponse.body.id}`);
+      })
+      .then((getResponse) => {
+        expect(getResponse.status).toEqual(204);
       });
   });
 });
