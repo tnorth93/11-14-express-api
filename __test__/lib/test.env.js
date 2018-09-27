@@ -1,2 +1,2 @@
-process.env.PORT = 3500;
+process.env.PORT = 4000;
 process.env.MONGODB_URI = 'mongodb://localhost/testdb';

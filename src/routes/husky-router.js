@@ -19,8 +19,8 @@ router.post('/api/huskies', jsonParser, (request, response, next) => {
       logger.log(logger.INFO, 'Responding with 200 code');
       return response.json(savedHusky);
     })
-    .catch(next)
-  });
+    .catch(next);
+});
 
 // ======================================================================================
 //  GET View a specific Husky
@@ -42,31 +42,30 @@ router.get('/api/huskies/:id', (request, response, next) => {
 //  DELETE Remove a specific Husky
 // ======================================================================================
 router.delete('/api/huskies/:id', (request, response, next) => {
-  logger.log(logger.INFO, 'Processing a DELETE request on /api/huskies');
-  if (storageByHash[request.params.id]) {
-    logger.log(logger.INFO, 'Element to be deleted has been found');
-    const indexToRemove = storageById.indexOf(request.params.id);
-    storageById.splice(indexToRemove, 1);
-    delete storageByHash[request.params.id];
-    return response.sendStatus(204);
-  }
-  return next(new HttpError(404, 'Husky was not found'));
+  return Husky.findByIdAndRemove(request.params.id)
+    .then((husky) => {
+      if (husky) {
+        logger.log(logger.INFO, 'Husky deleted');
+        return response.json(204, husky);
+      }
+      logger.log(logger.INFO, 'Responding with 404 code');
+      return next(new HttpError(404, 'husky not found'));
+    })
+    .catch(next);
 });
 
 // ======================================================================================
 //  PUT Update a Husky
 // ======================================================================================
 router.put('/api/huskies/:id', jsonParser, (request, response, next) => {
-  logger.log(logger.INFO, `Trying to update an object with id ${request.params.id}`);
-  if (storageByHash[request.params.id]) {
-    logger.log(logger.INFO, 'We found the right element to update');
-    if (request.body.name) {
-      storageByHash[request.params.id].name = request.body.name;
-    }
-    if (request.body.description) {
-      storageByHash[request.params.id].description = request.body.description;
-    }
-    return response.json(storageByHash[request.params.id]);
-  }
-  return next(new HttpError(404, 'Husky not found'));
+  return Husky.findByIdAndUpdate(request.params.id)
+    .then((husky) => {
+      if (husky) {
+        logger.log(logger.INFO, 'Husky updated');
+        return response.json(husky);
+      }
+      logger.log(logger.INFO, 'Responding with 404 code');
+      return next(new HttpError(404, 'husky not found'));
+    })
+    .catch(next);
 });

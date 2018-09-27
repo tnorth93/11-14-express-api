@@ -7,17 +7,16 @@ const huskySchema = mongoose.Schema({
     type: Date,
     default: () => new Date(),
   },
-  title: {
+  name: {
     type: String,
     required: true,
     unique: true,
   },
-  content: {
+  description: {
     type: String,
     required: true,
     minlength: 8,
-  }
+  },
 });
 
 module.exports = mongoose.model('husky', huskySchema);
-

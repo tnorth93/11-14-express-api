@@ -29,7 +29,7 @@ let internalServer = null;
 server.start = () => {
   return mongoose.connect(process.env.MONGODB_URI)
     .then(() => {
-      return internalServer = app.listen(process.env.PORT, () => {
+      return internalServer = app.listen(process.env.PORT, () => { //eslint-disable-line
         logger.log(logger.INFO, `server is on at PORT: ${process.env.PORT}`);
       });
     });

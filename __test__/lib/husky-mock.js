@@ -1,7 +1,7 @@
-'use strict':
+'use strict';
 
 const faker = require('faker');
-const Husky = require('../../mmodel/husky');
+const Husky = require('../../src/model/husky');
 
 const huskyMock = module.exports = {};
 
