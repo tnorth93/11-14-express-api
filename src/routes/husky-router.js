@@ -58,14 +58,18 @@ router.delete('/api/huskies/:id', (request, response, next) => {
 //  PUT Update a Husky
 // ======================================================================================
 router.put('/api/huskies/:id', jsonParser, (request, response, next) => {
-  return Husky.findByIdAndUpdate(request.params.id)
-    .then((husky) => {
-      if (husky) {
-        logger.log(logger.INFO, 'Husky updated');
-        return response.json(husky);
+  const updateOptions = {
+    runValidators: true,
+    new: true,
+  };
+  return Husky.findByIdAndUpdate(request.params.id, request.body, updateOptions)
+    .then((updatedHusky) => {
+      if (updatedHusky) {
+        logger.log(logger.INFO, 'Responding with 200');
+        return response.json(updatedHusky);
       }
-      logger.log(logger.INFO, 'Responding with 404 code');
-      return next(new HttpError(404, 'husky not found'));
+      logger.log(logger.INFO, 'Responding with 404');
+      return next(new HttpError(404, 'could not be found'));
     })
-    .catch(next);
+    .catch(error => next(error));
 });

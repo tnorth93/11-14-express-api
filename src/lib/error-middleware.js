@@ -24,6 +24,12 @@ module.exports = (error, request, response, next) => { //eslint-disable-line
     return response.sendStatus(400);
   }
 
+  if (errorMessage.includes('bad request')) {
+    logger.log(logger.ERROR, 'responding with 400 code');
+    logger.log(logger.ERROR, 'bad request');
+    return response.sendStatus(400);
+  }
+
   if (errorMessage.includes('duplicate key')) {
     logger.log(logger.ERROR, 'responding with 409 code');
     logger.log(logger.ERROR, 'duplicate value');
