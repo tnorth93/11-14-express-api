@@ -1,35 +1,35 @@
 'use strict';
 
-process.env.PORT = 3500;
-
 const faker = require('faker');
 const superagent = require('superagent');
 const server = require('../src/lib/server');
+const huskyMock = require('./lib/husky-mock');
 
-//! Vinicio - setting up the testing port, by HAND
 const API_URL = `http://localhost:${process.env.PORT}/api/huskies`;
 
 describe('/api/huskies', () => {
   beforeAll(server.start);
   afterAll(server.stop);
+  beforeEach(huskyMock.pCleanHuskyMocks);
 
   test('POST should respond with 200 status code and a new json husky', () => {
+    const originalRequest = {
+      name: faker.lorem.words(1),
+      description: faker.lorem.words(12),
+    };
     return superagent.post(API_URL)
       .set('Content-Type', 'application/json')
-      .send({
-        name: 'Dubs',
-        description: 'is a good boy',
-      })
+      .send(originalRequest)
       .then((response) => {
         expect(response.status).toEqual(200);
-        expect(response.body.description).toEqual('is a good boy');
-        expect(response.body.name).toEqual('Dubs');
+        expect(response.body.description).toEqual(originalRequest.description);
+        expect(response.body.name).toEqual(originalRequest.name);
         expect(response.body.timestamp).toBeTruthy();
-        expect(response.body.id).toBeTruthy();
+        expect(response.body._id.toString()).toBeTruthy();
       });
   });
 
-  test('POST should respond with 400 status code if there is no name', () => {
+  test('POST should respond with 400 status code if there is no body', () => {
     return superagent.post(API_URL)
       .set('Content-Type', 'application/json')
       .send({
@@ -41,31 +41,19 @@ describe('/api/huskies', () => {
       });
   });
 
-  test('GET should respond with 404 for no id included in url', () => {
-    return superagent.get(`http://localhost:${process.env.PORT}/api/huskies/`)
-      .then(Promise.reject)
-      .catch((response) => {
-        expect(response.status).toEqual(404);
-      });
-  });
 
   test('GET should respond with 200 status code and a json husky if there is a matching id', () => {
-    const originalRequest = {
-      name: faker.lorem.words(3),
-      description: faker.lorem.words(6),
-    };
-    return superagent.post(API_URL)
-      .set('Content-Type', 'application/json')
-      .send(originalRequest)
-      .then((postResponse) => {
-        originalRequest.id = postResponse.body.id;
-        return superagent.get(`${API_URL}/${postResponse.body.id}`);
+    let savedHuskyMock = null;
+    return huskyMock.pCreateHuskyMock()
+      .then((createdHuskyMock) => {
+        savedHuskyMock = createdHuskyMock;
+        return superagent.get(`${API_URL}/${createdHuskyMock._id}`);
       })
       .then((getResponse) => {
         expect(getResponse.status).toEqual(200);
         expect(getResponse.body.timestamp).toBeTruthy();
-        expect(getResponse.body.id).toEqual(originalRequest.id);
-        expect(getResponse.body.name).toEqual(originalRequest.name);
+        expect(getResponse.body._id.toString()).toEqual(savedHuskyMock._id.toString());
+        expect(getResponse.body.name).toEqual(savedHuskyMock.name);
       });
   });
 
@@ -93,49 +81,51 @@ describe('/api/huskies', () => {
       });
   });
 
-  test('PUT should respond with an updated husky name', () => {
-    const ogRequest = {
-      name: faker.lorem.words(1),
-      description: faker.lorem.words(5),
-    };
-    return superagent.post(API_URL)
-      .set('Content-Type', 'application/json')
-      .send(ogRequest)
-      .then((postResponse) => {
-        ogRequest.id = postResponse.body.id;
-        return superagent.put(`${API_URL}/${postResponse.body.id}`)
-          .send({
-            name: 'Chad',
+  test('PUT should respond with a 400 when body is not sent with request', () => {
+    return huskyMock.pCreateHuskyMock()
+      .then((createdHuskyMock) => {
+        return superagent.put(`${API_URL}/${createdHuskyMock._id}`)
+          .set('Content-type', 'application/json')
+          .send({})
+          .then(Promise.reject)
+          .catch((response) => {
+            expect(response.status).toEqual(undefined);
           });
-      })
-      .then((putResponse) => {
-        expect(putResponse.status).toEqual(200);
-        expect(putResponse.body.id).toEqual(ogRequest.id);
-        expect(putResponse.body.name).toEqual('Chad');
-        expect(putResponse.body.description).toEqual(ogRequest.description);
       });
   });
 
-  test('PUT should respond with an updated husky description', () => {
-    const ogRequest = {
-      name: faker.lorem.words(1),
-      description: faker.lorem.words(5),
-    };
-    return superagent.post(API_URL)
-      .set('Content-Type', 'application/json')
-      .send(ogRequest)
-      .then((postResponse) => {
-        ogRequest.id = postResponse.body.id;
-        return superagent.put(`${API_URL}/${postResponse.body.id}`)
+  test('PUT should respond with an updated husky name', () => {
+    let savedHuskyMock = null;
+    return huskyMock.pCreateHuskyMock()
+      .then((createdHuskyMock) => {
+        savedHuskyMock = createdHuskyMock;
+        return superagent.put(`${API_URL}/${createdHuskyMock._id}`)
           .send({
-            description: 'is a shady lil guy',
+            name: 'Charles',
           });
       })
       .then((putResponse) => {
         expect(putResponse.status).toEqual(200);
-        expect(putResponse.body.id).toEqual(ogRequest.id);
-        expect(putResponse.body.name).toEqual(ogRequest.name);
-        expect(putResponse.body.description).toEqual('is a shady lil guy');
+        expect(putResponse.body.name).toEqual('Charles');
+        expect(putResponse.body.description).toEqual(savedHuskyMock.description);
+      });
+  });
+
+
+  test('PUT should respond with an updated husky description', () => {
+    let savedHuskyMock = null;
+    return huskyMock.pCreateHuskyMock()
+      .then((createdHuskyMock) => {
+        savedHuskyMock = createdHuskyMock;
+        return superagent.put(`${API_URL}/${createdHuskyMock._id}`)
+          .send({
+            description: 'is a real bad dog',
+          });
+      })
+      .then((putResponse) => {
+        expect(putResponse.status).toEqual(200);
+        expect(putResponse.body.name).toEqual(savedHuskyMock.name);
+        expect(putResponse.body.description).toEqual('is a real bad dog');
       });
   });
 
@@ -148,16 +138,9 @@ describe('/api/huskies', () => {
   });
 
   test('DELETE respond with a 204 and removes a husky', () => {
-    const ogRequest = {
-      name: faker.lorem.words(1),
-      description: faker.lorem.words(5),
-    };
-    return superagent.post(API_URL)
-      .set('Content-Type', 'application/json')
-      .send(ogRequest)
-      .then((postResponse) => {
-        ogRequest.id = postResponse.body.id;
-        return superagent.delete(`${API_URL}/${postResponse.body.id}`);
+    return huskyMock.pCreateHuskyMock()
+      .then((createdHuskyMock) => {
+        return superagent.delete(`${API_URL}/${createdHuskyMock._id}`);
       })
       .then((getResponse) => {
         expect(getResponse.status).toEqual(204);
