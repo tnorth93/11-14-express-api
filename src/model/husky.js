@@ -1,6 +1,8 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const HttpError = require('http-errors');
+const Pack = require('./pack');
 
 const huskySchema = mongoose.Schema({
   timestamp: {
@@ -16,6 +18,11 @@ const huskySchema = mongoose.Schema({
     type: String,
     required: true,
     minlength: 8,
+  },
+  pack: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'pack',
   },
 });
 
