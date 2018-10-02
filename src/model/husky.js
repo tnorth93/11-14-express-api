@@ -26,4 +26,38 @@ const huskySchema = mongoose.Schema({
   },
 });
 
+// ========================================================================
+// HOOKS
+// ========================================================================
+function huskyPreHook(done) {
+  return Pack.findById(this.pack)
+    .then((packFound) => {
+      if(!packFound) {
+        throw new HttpError(404, 'pack not found');
+      }
+      packFound.dawgPacks.push(this._id);
+      return packFound.save();
+    })
+    .then(() => done())
+    .catch(error => done(error));
+}
+
+const huskyPostHook = (document, done) => {
+  return Pack.findById(document.pack)
+    .then((packFound) => {
+      if (!packFound) {
+        throw new HttpError(500, 'pack not found');
+      }
+      packFound.blogPosts = packFound.dawgPacks.filter((husky) => {
+        return husky._id.toString() !== document._id.toString();
+      });
+      return packFound.save();
+    })
+    .then(() => done())
+    .catch(error => done(error));
+};
+
+huskySchema.pre('save', huskyPreHook);
+huskySchema.post('remove', huskyPostHook);
+
 module.exports = mongoose.model('husky', huskySchema);
