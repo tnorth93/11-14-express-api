@@ -7,7 +7,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "eslint . && jest --coverage",
+    "test": "eslint . && jest --coverage --forceExit --runInBand",
     "lint": "eslint .",
     "dbOn": "mkdir -p ./db && mongod --dbpath ./db",
     "dbOff": "killall mongod"
