@@ -64,51 +64,57 @@ describe('/api/packs', () => {
   });
 
   test('GET should respond with 404 for non-existent path', () => {
-    return superagent.get(`http://localhost:${process.env.PORT}/api/huskiesc`)
+    return superagent.get(`${API_URL}/hurrr`)
       .then(Promise.reject)
       .catch((response) => {
         expect(response.status).toEqual(404);
       });
   });
-});
 
-// =====================================================================================
-// PUT TESTS
-// =====================================================================================
-test('PUT should respond with a 404 when trying to update a non-existent husky', () => {
-  return superagent.put(`${API_URL}/ewew`)
-    .then(Promise.reject)
-    .catch((response) => {
-      expect(response.status).toEqual(404);
-    });
-});
+  // =====================================================================================
+  // PUT TESTS
+  // =====================================================================================
+  test('PUT should respond with a 404 when trying to update a non-existent husky', () => {
+    return superagent.put(`${API_URL}/ewew`)
+      .then(Promise.reject)
+      .catch((response) => {
+        expect(response.status).toEqual(404);
+      });
+  });
 
-test('PUT should respond with a 400 when body is not sent with request', () => {
-  return packMock.pCreatePackMock()
-    .then((createdPackMock) => {
-      return superagent.put(`${API_URL}/${createdPackMock._id}`)
-        .set('Content-type', 'application/json')
-        .send({})
-        .then(Promise.reject)
-        .catch((response) => {
-          expect(response.status).toEqual(404);
-        });
-    });
-});
+  test('PUT should respond with a 400 when body is not sent with request', () => {
+    return packMock.pCreatePackMock()
+      .then((createdPackMock) => {
+        return superagent.put(`${API_URL}/${createdPackMock._id}`)
+          .set('Content-type', 'application/json')
+          .send({})
+          .then(Promise.reject)
+          .catch((response) => {
+            expect(response.status).toEqual(404);
+          });
+      });
+  });
 
-test('PUT should respond with an updated husky name', () => {
-  let savedPackMock;
-  return packMock.pCreatePackMock()
-    .then((mock) => {
-      savedPackMock = mock;
-      const packPut = {
-        name: faker.lorem.words(1),
-        description: faker.lorem.words(12),
-      };
-      return superagent.put(`${API_URL}/${savedPackMock._id}`)
-        .send(packPut)
-        .then((response) => {
-          expect(response.status).toEqual(200);
-        });
-    });
+  // =====================================================================================
+  // DELETE TESTS
+  // =====================================================================================
+  test(' DELETE should respond with a 404 if there is no husky to remove', () => {
+    return superagent.delete(`${API_URL}/beeeeebooooooooop`)
+      .then(Promise.reject)
+      .catch((getResponse) => {
+        expect(getResponse.status).toEqual(404);
+      });
+  });
+
+  test('DELETE respond with a 204 and removes a husky', () => {
+    let savedMock;
+    return packMock.pCreatePackMock()
+      .then((createdPackMock) => {
+        savedMock = createdPackMock;
+        return superagent.delete(`${API_URL}/${savedMock._id}`);
+      })
+      .then((getResponse) => {
+        expect(getResponse.status).toEqual(204);
+      });
+  });
 });
