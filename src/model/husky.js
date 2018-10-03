@@ -32,7 +32,7 @@ const huskySchema = mongoose.Schema({
 function huskyPreHook(done) {
   return Pack.findById(this.pack)
     .then((packFound) => {
-      if(!packFound) {
+      if (!packFound) {
         throw new HttpError(404, 'pack not found');
       }
       packFound.dawgPacks.push(this._id);

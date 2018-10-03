@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const HttpError = require('http-errors');
 const Pack = require('../model/pack');
 const logger = require('../lib/logger');
+
 const jsonParser = bodyParser.json();
 const router = module.exports = new express.Router();
 
@@ -42,14 +43,14 @@ router.get('/api/packs/:id', (request, response, next) => {
 router.delete('/api/packs/:id', (request, response, next) => {
   return Pack.findByIdAndRemove(request.params.id)
     .then((pack) => {
-    if (pack) {
-      logger.log(logger.INFO, 'Pack deleted');
-      return response.json(204, pack);
-    }
-    logger.log(logger.INFO, 'Responding with 404 code');
-    return next(new HttpError(404, 'pack not found'));
-  })
-  .catch(next);
+      if (pack) {
+        logger.log(logger.INFO, 'Pack deleted');
+        return response.json(204, pack);
+      }
+      logger.log(logger.INFO, 'Responding with 404 code');
+      return next(new HttpError(404, 'pack not found'));
+    })
+    .catch(next);
 });
 
 // ================================================================================
@@ -60,7 +61,7 @@ router.put('api/packs/:id', (request, response, next) => {
     runValidators: true,
     new: true,
   };
-  return Pack.findByIdAndUpdate(request.params.id, request.body, updateOptions)
+  return Pack.findByIdAndUpdate(request.params.id, request.body, packUpdateOptions)
     .then((updatedPack) => {
       if (updatedPack) {
         logger.log(logger.INFO, 'Responding with 200');

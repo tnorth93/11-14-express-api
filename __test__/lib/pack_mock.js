@@ -5,7 +5,7 @@ const Pack = require('../../src/model/pack');
 
 const packMock = module.exports = {};
 
-packMock.pCreatePackMock= () => {
+packMock.pCreatePackMock = () => {
   return new Pack({
     name: faker.lorem.words(1),
     description: faker.lorem.words(12),

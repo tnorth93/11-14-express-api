@@ -20,7 +20,7 @@ const packSchema = mongoose.Schema({
   dawgPacks: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'blog-post',
+      ref: 'packHusky',
     },
   ],
 },
