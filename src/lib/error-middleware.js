@@ -2,7 +2,7 @@
 
 const logger = require('./logger');
 
-module.exports = (error, request, response, next) => { //eslint-disable-line
+module.exports = (error, request, response, next) => { // eslint-disable-line
   logger.log(logger.ERROR, 'error middleware');
   logger.log(logger.ERROR, error);
   if (error.status) {

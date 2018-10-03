@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const logger = require('./logger');
 const loggerMiddleware = require('./logger-middleware');
 const errorMiddleware = require('./error-middleware');
+const packRoutes = require('../routes/pack-router');
 const huskyRoutes = require('../routes/husky-router');
 
 const app = express();
@@ -13,7 +14,7 @@ const app = express();
 // Routes
 //-------------------------------------------------------------------------------------------------
 app.use(loggerMiddleware);
-
+app.use(packRoutes);
 app.use(huskyRoutes);
 
 app.all('*', (request, response) => {

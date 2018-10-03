@@ -7,7 +7,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "eslint . && jest --coverage",
+    "test": "eslint . && jest --coverage --forceExit --runInBand",
     "lint": "eslint .",
     "dbOn": "mkdir -p ./db && mongod --dbpath ./db",
     "dbOff": "killall mongod"
@@ -34,7 +34,7 @@
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "http-errors": "^1.7.1",
-    "mongoose": "^5.2.17",
+    "mongoose": "^5.3.0",
     "uuid": "^3.3.2",
     "winston": "^3.1.0"
   }
