@@ -6,7 +6,7 @@ const HttpError = require('http-errors');
 
 const Account = require('../model/account');
 const logger = require('../lib/logger');
-
+const basicAuthMiddleware = require('../lib/basic-auth-middleware');
 const jsonParser = bodyParser.json();
 const router = module.exports = new express.Router();
 
@@ -27,4 +27,16 @@ router.post('/api/signup', jsonParser, (request, response, next) => {
     })
     .catch(next);
 });
+
+router.get('api/login', basicAuthMiddleware, (request, response, next) => {
+  if (!request.account) {
+    return next(new HttpError(400, 'bad request'));
+  }
+  return request.account.pCreateToken()
+    .then((token) => {
+      logger.log(logger.INFO, 'responding with 200 and a token');
+      return response.json({ token });
+    })
+    .catch(next);
+})
 
