@@ -4,7 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const HttpError = require('http-errors');
 
-const Account - require('../model/account');
+const Account = require('../model/account');
 const logger = require('../lib/logger');
 
 const jsonParser = bodyParser.json();

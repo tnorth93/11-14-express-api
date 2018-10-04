@@ -7,6 +7,7 @@ const loggerMiddleware = require('./logger-middleware');
 const errorMiddleware = require('./error-middleware');
 const packRoutes = require('../routes/pack-router');
 const huskyRoutes = require('../routes/husky-router');
+const authRoutes = require('../routes/auth-router');
 
 const app = express();
 
@@ -16,6 +17,7 @@ const app = express();
 app.use(loggerMiddleware);
 app.use(packRoutes);
 app.use(huskyRoutes);
+app.use(authRoutes);
 
 app.all('*', (request, response) => {
   logger.log(logger.INFO, 'Returning a 404 from catch-all/default route (the route was not found');
