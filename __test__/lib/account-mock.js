@@ -1,7 +1,7 @@
 'use strict';
 
 const faker = require('faker');
-const Account = require('../../model/account');
+const Account = require('../../src/model/account');
 
 const accountMock = module.exports = {};
 

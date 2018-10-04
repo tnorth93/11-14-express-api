@@ -4,6 +4,7 @@ const faker = require('faker');
 const superagent = require('superagent');
 const server = require('../src/lib/server');
 const API_URL = `http://localhost:${process.env.PORT}/api/signup`;
+const accountMock = require('./lib/account-mock');
 
 describe('Auth Tests', () => {
   beforeAll(server.start);
