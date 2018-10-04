@@ -18,6 +18,18 @@ describe('Auth Tests', () => {
       }).then((response) => {
         expect(response.status).toEqual(200);
         expect(response.body.token).toBeTruthy();
-    })
-  })
+    });
+  });
+
+  test('return 200 and a token if logging in', () => {
+    return accountMock.pCreateMock()
+      .then((mock) => {
+        return superagent.get(`${API_URL}/api/login`)
+          .auth(mock.request.username, mock.request.password);
+      })
+      .then((response) => {
+        expect(response.status).toEqual(200);
+        expect(response.body.token).toBeTruthy();
+      });
+  });
 });
