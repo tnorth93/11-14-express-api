@@ -113,8 +113,8 @@ describe('/api/packs', () => {
         savedMock = createdPackMock;
         return superagent.delete(`${API_URL}/${savedMock._id}`);
       })
-      .then((getResponse) => {
-        expect(getResponse.status).toEqual(204);
+      .then((response) => {
+        expect(response.status).toEqual(200);
       });
   });
 });

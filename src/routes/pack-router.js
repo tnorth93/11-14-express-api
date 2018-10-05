@@ -41,14 +41,14 @@ router.get('/api/packs/:id', (request, response, next) => {
 // DELETE Delete a Pack
 // ================================================================================
 router.delete('/api/packs/:id', (request, response, next) => {
-  return Pack.findByIdAndRemove(request.params.id)
+  return Pack.findByIdAndDelete(request.params.id)
     .then((pack) => {
-      if (pack) {
-        logger.log(logger.INFO, 'Pack deleted');
-        return response.json(204, pack);
+      if (!pack) {
+        logger.log(logger.INFO, 'Responding with 404 code');
+        return next(new HttpError(404, 'pack not found'));
       }
-      logger.log(logger.INFO, 'Responding with 404 code');
-      return next(new HttpError(404, 'pack not found'));
+      logger.log(logger.INFO, 'deleted');
+      return response.json(pack);
     })
     .catch(next);
 });

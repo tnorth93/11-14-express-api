@@ -22,7 +22,7 @@ module.exports = (request, reponse, next) => {
 
   return Account.findOne({ username })
     .then((account) => {
-      if (!aacount) {
+      if (!account) {
         return next(new HttpError(400, 'AUTH - invalid request'));
       }
       return account.pVerifyPassword(password);
@@ -32,4 +32,4 @@ module.exports = (request, reponse, next) => {
       return next();
     })
     .catch(next);
-}
+};
