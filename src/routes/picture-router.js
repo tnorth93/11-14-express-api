@@ -6,7 +6,7 @@ const HttpError = require('http-errors');
 const Picture = require('../model/picture');
 const bearerAuthMiddleWare = require('../lib/bearer-auth-middleware');
 
-const  jsonParser = bodyParser.json;
+const jsonParser = bodyParser.json;
 const router = module.exports = new express.Router();
 
 router.post('/api/picture', bearerAuthMiddleWare, jsonParser, (request, response, next) => {

@@ -5,7 +5,7 @@ const jsonWebToken = require('jsonwebtoken');
 const Account = require('../model/account');
 
 const promisify = callbackStyleFunction => (...args) => {
-  return new Prmoise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     callbackStyleFunction(...args, (error, data) => {
       if (error) {
         return reject(error);

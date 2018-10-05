@@ -1,31 +1,30 @@
 'use strict';
 
 const faker = require('faker');
-const Picture = require('../../src/model/picture');
-const accountMock = require('./account-mock');
+const superagent = require('superagent');
+const server = require('../src/lib/server');
+const accountMock = require('./lib/account-mock');
 
-const pictureMock = module.exports = {};
 
-pictureMock.pCreatePictureMock = () => {
-  const resultMock = {};
-  return accountMock.pCreateMock()
-    .then((mockedAccount) => {
-      resultMock.account = mockedAccount;
-      return new Picture({
-        title: faker.lorem.words(2),
-        url: faker.internet.url(),
-        account: mockedAccount.account._id,
-      }).save();
-    })
-    .then((createdPicture) => {
-      resultMock.picture = createdPicture;
-      return resultMock;
-    });
-};
+const API_URL = `http://localhost:${process.env.PORT}/api/picture`;
 
-pictureMock.pCleanPictureMock = () => {
-  return Promise.all([
-    Picture.remove({}),
-    accountMock.pCleanAccountMocks(),
-  ]);
-};
+describe('/api/pictures', () => {
+  beforeAll(server.start);
+  afterAll(server.stop);
+  beforeEach(accountMock.pCleanAccountMocks);
+
+  test('should respond with 200 and a picture', () => {
+    return accountMock.pCreateMock()
+      .then((mock) => {
+        return superagent.post(API_URL)
+          .set('Authorization', `Bearer ${mock.token}`)
+          .send({
+            title: faker.lorem.words(2),
+            url: faker.internet.url(),
+          });
+      })
+      .then((response) => {
+        expect(response.status).toEqual(200);
+      });
+  });
+});
