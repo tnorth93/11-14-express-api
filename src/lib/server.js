@@ -8,16 +8,18 @@ const errorMiddleware = require('./error-middleware');
 const packRoutes = require('../routes/pack-router');
 const huskyRoutes = require('../routes/husky-router');
 const authRoutes = require('../routes/auth-router');
+const pictureRoutes = require('../routes/picture-router');
 
 const app = express();
 
-//-------------------------------------------------------------------------------------------------
+// ==============================================================================
 // Routes
-//-------------------------------------------------------------------------------------------------
+// ==============================================================================
 app.use(loggerMiddleware);
 app.use(packRoutes);
 app.use(huskyRoutes);
 app.use(authRoutes);
+app.use(pictureRoutes);
 
 app.all('*', (request, response) => {
   logger.log(logger.INFO, 'Returning a 404 from catch-all/default route (the route was not found');
@@ -25,7 +27,7 @@ app.all('*', (request, response) => {
 });
 
 app.use(errorMiddleware);
-//-------------------------------------------------------------------------------------------------
+
 const server = module.exports = {};
 let internalServer = null;
 
