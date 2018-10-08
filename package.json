@@ -21,6 +21,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "aws-sdk": "^2.329.0",
     "eslint": "^5.5.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
@@ -34,9 +35,12 @@
     "body-parser": "^1.18.3",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
+    "fs-extra": "^7.0.0",
     "http-errors": "^1.7.1",
     "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.3.0",
+    "multer": "^1.4.0",
+    "s3": "^4.4.0",
     "uuid": "^3.3.2",
     "winston": "^3.1.0"
   }
