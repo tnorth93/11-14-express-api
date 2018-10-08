@@ -16,9 +16,15 @@ accountMock.pCreateMock = () => {
   return Account.create(mock.request.username, mock.request.email, mock.request.password)
     .then((createdAccount) => {
       mock.account = createdAccount;
+      return createdAccount.pCreateToken();
+    })
+    .then((token) => {
+      mock.token = token;
       return mock;
     })
-    .catch(console.error);
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 accountMock.pCleanAccountMocks = () => Account.remove({});

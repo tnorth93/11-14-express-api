@@ -15,7 +15,7 @@ describe('/api/packs', () => {
   // =====================================================================================
   // POST TESTS
   // =====================================================================================
-  test('should respond with 200 status code and a new json note', () => {
+  test('should respond with 200 status code', () => {
     const originalRequest = {
       name: faker.lorem.words(1),
       description: faker.lorem.words(12),
